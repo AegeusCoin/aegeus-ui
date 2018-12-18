@@ -32,6 +32,9 @@ then
   exit
 fi
 
+## Determine the version
+export LINVER=`cat /etc/*-release|egrep '^VERSION_ID='|sed 's/VERSION_ID=//;s/"//g'`
+
 ## Verify curl is installed
 function verify_curl() {
 
@@ -72,7 +75,13 @@ function install_docker() {
   fi
 
   apt-get -y update
-  apt-get -y install docker-ce
+
+  if (( "$FLAVOR" = "ubuntu" && $(awk 'BEGIN {print ("'$LINVER'" > "'18.04'")}') ));
+  then
+    apt-get -y install docker.io
+  else
+    apt-get -y install docker-ce
+  fi
 
   INSTALL_STATUS=`docker --version`
   if [ -z "$INSTALL_STATUS" ];
