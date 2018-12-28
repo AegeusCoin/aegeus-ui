@@ -20,8 +20,7 @@ then
 fi
 
 ## Determine the IP of this VPS
-default_iface=$(awk '$2 == 00000000 { print $1 }' /proc/net/route)
-export GATEWAYIP=`ip addr show dev "$default_iface" | awk '$1 == "inet" { sub("/.*", "", $2); print $2 }'`
+export GATEWAYIP=`curl https://ipinfo.io/ip`
 
 ## Determine which distro is running
 export FLAVOR=`cat /etc/*-release|egrep '^ID='|sed 's/ID=//'|tr '[A-Z]' '[a-z]'`
